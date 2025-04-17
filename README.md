@@ -1,3 +1,6 @@
+**THIS IS A FORK OF `doug-martin/goqu`**
+---
+
 ```
   __ _  ___   __ _ _   _
  / _` |/ _ \ / _` | | | |
