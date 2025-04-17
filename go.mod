@@ -1,4 +1,4 @@
-module github.com/doug-martin/goqu/v9
+module github.com/SkelatorIndy/goqu
 
 go 1.19
 
