@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/doug-martin/goqu/v9/internal/util"
+	"github.com/SkelatorIndy/goqu/internal/util"
 )
 
 type columnList struct {

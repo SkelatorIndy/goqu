@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/doug-martin/goqu/v9/exec"
-	"github.com/doug-martin/goqu/v9/exp"
-	"github.com/doug-martin/goqu/v9/internal/errors"
-	"github.com/doug-martin/goqu/v9/internal/sb"
+	"github.com/SkelatorIndy/goqu/exec"
+	"github.com/SkelatorIndy/goqu/exp"
+	"github.com/SkelatorIndy/goqu/internal/errors"
+	"github.com/SkelatorIndy/goqu/internal/sb"
 )
 
 // Dataset for creating and/or executing SELECT SQL statements.

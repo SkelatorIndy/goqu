@@ -3,8 +3,8 @@ package goqu_test
 import (
 	"testing"
 
-	"github.com/doug-martin/goqu/v9"
-	"github.com/doug-martin/goqu/v9/exp"
+	"github.com/SkelatorIndy/goqu"
+	"github.com/SkelatorIndy/goqu/exp"
 	"github.com/stretchr/testify/suite"
 )
 

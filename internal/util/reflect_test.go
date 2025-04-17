@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/doug-martin/goqu/v9/internal/util"
+	"github.com/SkelatorIndy/goqu/internal/util"
 	"github.com/stretchr/testify/suite"
 )
 

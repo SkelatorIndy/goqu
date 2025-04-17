@@ -7,15 +7,15 @@ goqu an idiomatch SQL builder, and query package.
 	 \__, |\___/ \__, |\__,_|
 	 |___/          |_|
 
-Please see https://github.com/doug-martin/goqu for an introduction to goqu.
+Please see https://github.com/SkelatorIndy/goqu for an introduction to goqu.
 */
 package goqu
 
 import (
 	"time"
 
-	"github.com/doug-martin/goqu/v9/internal/util"
-	"github.com/doug-martin/goqu/v9/sqlgen"
+	"github.com/SkelatorIndy/goqu/internal/util"
+	"github.com/SkelatorIndy/goqu/sqlgen"
 )
 
 type DialectWrapper struct {

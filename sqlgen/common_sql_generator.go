@@ -1,9 +1,9 @@
 package sqlgen
 
 import (
-	"github.com/doug-martin/goqu/v9/exp"
-	"github.com/doug-martin/goqu/v9/internal/errors"
-	"github.com/doug-martin/goqu/v9/internal/sb"
+	"github.com/SkelatorIndy/goqu/exp"
+	"github.com/SkelatorIndy/goqu/internal/errors"
+	"github.com/SkelatorIndy/goqu/internal/sb"
 )
 
 var ErrNoUpdatedValuesProvided = errors.New("no update values provided")
