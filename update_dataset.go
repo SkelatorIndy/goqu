@@ -93,6 +93,7 @@ func (ud *UpdateDataset) copy(clauses exp.UpdateClauses) *UpdateDataset {
 		isPrepared:   ud.isPrepared,
 		queryFactory: ud.queryFactory,
 		err:          ud.err,
+		location:     ud.location,
 	}
 }
 

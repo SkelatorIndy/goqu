@@ -90,6 +90,7 @@ func (td *TruncateDataset) copy(clauses exp.TruncateClauses) *TruncateDataset {
 		isPrepared:   td.isPrepared,
 		queryFactory: td.queryFactory,
 		err:          td.err,
+		location:     td.location,
 	}
 }
 

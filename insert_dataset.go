@@ -96,6 +96,7 @@ func (id *InsertDataset) copy(clauses exp.InsertClauses) *InsertDataset {
 		isPrepared:   id.isPrepared,
 		queryFactory: id.queryFactory,
 		err:          id.err,
+		location:     id.location,
 	}
 }
 

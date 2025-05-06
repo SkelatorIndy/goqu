@@ -96,6 +96,7 @@ func (dd *DeleteDataset) copy(clauses exp.DeleteClauses) *DeleteDataset {
 		isPrepared:   dd.isPrepared,
 		queryFactory: dd.queryFactory,
 		err:          dd.err,
+		location:     dd.location,
 	}
 }
 

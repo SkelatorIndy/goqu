@@ -102,6 +102,7 @@ func (sd *SelectDataset) copy(clauses exp.SelectClauses) *SelectDataset {
 		isPrepared:   sd.isPrepared,
 		queryFactory: sd.queryFactory,
 		err:          sd.err,
+		location:     sd.location,
 	}
 }
 

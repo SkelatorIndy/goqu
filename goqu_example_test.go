@@ -2,6 +2,7 @@ package goqu_test
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
@@ -234,18 +235,30 @@ func ExampleSetTimeLocation() {
 		panic(err)
 	}
 
-	// use original time with tz info
-	ds := goqu.Insert("test").Rows(goqu.Record{
+	mDB, _, _ := sqlmock.New()
+
+	db := goqu.Dialect("postgres").DB(mDB)
+
+	db2 := goqu.New("postgres", db.Db)
+	db2.WithLocation(loc)
+
+	// use UTC
+	ds := db.Insert("test").Rows(goqu.Record{
 		"address": "111 Address",
 		"name":    "Bob Yukon",
 		"created": created,
-	}).WithLocation(loc)
+	})
 	sql, _, _ := ds.ToSQL()
-	fmt.Println(sql)
+	log.Println(sql)
 
-	// convert time to UTC
-	sql, _, _ = ds.WithLocation(time.UTC).ToSQL()
-	fmt.Println(sql)
+	// convert time to new location
+	ds2 := db2.Insert("test").Rows(goqu.Record{
+		"address": "111 Address",
+		"name":    "Bob Yukon",
+		"created": created,
+	})
+	sql, _, _ = ds2.ToSQL()
+	log.Println(sql)
 
 	// Output:
 	// INSERT INTO "test" ("address", "created", "name") VALUES ('111 Address', '2019-10-01T23:01:00+08:00', 'Bob Yukon')
