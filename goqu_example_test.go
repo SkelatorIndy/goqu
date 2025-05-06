@@ -235,18 +235,16 @@ func ExampleSetTimeLocation() {
 	}
 
 	// use original time with tz info
-	goqu.SetTimeLocation(loc)
 	ds := goqu.Insert("test").Rows(goqu.Record{
 		"address": "111 Address",
 		"name":    "Bob Yukon",
 		"created": created,
-	})
+	}).WithLocation(loc)
 	sql, _, _ := ds.ToSQL()
 	fmt.Println(sql)
 
 	// convert time to UTC
-	goqu.SetTimeLocation(time.UTC)
-	sql, _, _ = ds.ToSQL()
+	sql, _, _ = ds.WithLocation(time.UTC).ToSQL()
 	fmt.Println(sql)
 
 	// Output:

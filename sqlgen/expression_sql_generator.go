@@ -305,7 +305,13 @@ func (esg *expressionSQLGenerator) literalTime(b sb.SQLBuilder, t time.Time) {
 		esg.placeHolderSQL(b, t)
 		return
 	}
-	esg.Generate(b, t.In(timeLocation).Format(esg.dialectOptions.TimeFormat))
+
+	location := b.Location()
+	if location == nil {
+		location = timeLocation
+	}
+
+	esg.Generate(b, t.In(location).Format(esg.dialectOptions.TimeFormat))
 }
 
 // Generates SQL for a Float Value

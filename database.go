@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"sync"
+	"time"
 
 	"github.com/SkelatorIndy/goqu/exec"
 )
@@ -31,6 +32,8 @@ type (
 		Db     SQLDatabase
 		qf     exec.QueryFactory
 		qfOnce sync.Once
+
+		location *time.Location
 	}
 )
 
@@ -111,6 +114,11 @@ func (d *Database) WithTx(fn func(*TxDatabase) error) error {
 	return tx.Wrap(func() error { return fn(tx) })
 }
 
+// WithLocation sets a local time.Location to use over the global time.Location for time interpolation
+func (d *Database) WithLocation(loc *time.Location) {
+	d.location = loc
+}
+
 // Creates a new Dataset that uses the correct adapter and supports queries.
 //
 //	var ids []uint32
@@ -121,27 +129,27 @@ func (d *Database) WithTx(fn func(*TxDatabase) error) error {
 //
 // from...: Sources for you dataset, could be table names (strings), a goqu.Literal or another goqu.Dataset
 func (d *Database) From(from ...interface{}) *SelectDataset {
-	return newDataset(d.dialect, d.queryFactory()).From(from...)
+	return newDataset(d.dialect, d.queryFactory()).WithLocation(d.location).From(from...)
 }
 
 func (d *Database) Select(cols ...interface{}) *SelectDataset {
-	return newDataset(d.dialect, d.queryFactory()).Select(cols...)
+	return newDataset(d.dialect, d.queryFactory()).WithLocation(d.location).Select(cols...)
 }
 
 func (d *Database) Update(table interface{}) *UpdateDataset {
-	return newUpdateDataset(d.dialect, d.queryFactory()).Table(table)
+	return newUpdateDataset(d.dialect, d.queryFactory()).WithLocation(d.location).Table(table)
 }
 
 func (d *Database) Insert(table interface{}) *InsertDataset {
-	return newInsertDataset(d.dialect, d.queryFactory()).Into(table)
+	return newInsertDataset(d.dialect, d.queryFactory()).WithLocation(d.location).Into(table)
 }
 
 func (d *Database) Delete(table interface{}) *DeleteDataset {
-	return newDeleteDataset(d.dialect, d.queryFactory()).From(table)
+	return newDeleteDataset(d.dialect, d.queryFactory()).WithLocation(d.location).From(table)
 }
 
 func (d *Database) Truncate(table ...interface{}) *TruncateDataset {
-	return newTruncateDataset(d.dialect, d.queryFactory()).Table(table...)
+	return newTruncateDataset(d.dialect, d.queryFactory()).WithLocation(d.location).Table(table...)
 }
 
 // Sets the logger for to use when logging queries

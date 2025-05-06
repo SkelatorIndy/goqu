@@ -1,6 +1,8 @@
 package goqu
 
 import (
+	"time"
+
 	"github.com/SkelatorIndy/goqu/exec"
 	"github.com/SkelatorIndy/goqu/exp"
 	"github.com/SkelatorIndy/goqu/internal/errors"
@@ -15,6 +17,8 @@ type DeleteDataset struct {
 	isPrepared   prepared
 	queryFactory exec.QueryFactory
 	err          error
+
+	location *time.Location
 }
 
 // used internally by database to create a database with a specific adapter
@@ -39,6 +43,11 @@ func (dd *DeleteDataset) Expression() exp.Expression {
 // Clones the dataset
 func (dd *DeleteDataset) Clone() exp.Expression {
 	return dd.copy(dd.clauses)
+}
+
+func (dd *DeleteDataset) WithLocation(loc *time.Location) *DeleteDataset {
+	dd.location = loc
+	return dd
 }
 
 // Set the parameter interpolation behavior. See examples
@@ -241,6 +250,8 @@ func (dd *DeleteDataset) deleteSQLBuilder() sb.SQLBuilder {
 	if dd.err != nil {
 		return buf.SetError(dd.err)
 	}
+	buf.SetLocation(dd.location)
+
 	dd.dialect.ToDeleteSQL(buf, dd.clauses)
 	return buf
 }

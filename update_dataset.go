@@ -1,6 +1,8 @@
 package goqu
 
 import (
+	"time"
+
 	"github.com/SkelatorIndy/goqu/exec"
 	"github.com/SkelatorIndy/goqu/exp"
 	"github.com/SkelatorIndy/goqu/internal/errors"
@@ -13,6 +15,8 @@ type UpdateDataset struct {
 	isPrepared   prepared
 	queryFactory exec.QueryFactory
 	err          error
+
+	location *time.Location
 }
 
 var ErrUnsupportedUpdateTableType = errors.New("unsupported table type, a string or identifier expression is required")
@@ -28,6 +32,11 @@ func newUpdateDataset(d string, queryFactory exec.QueryFactory) *UpdateDataset {
 
 func Update(table interface{}) *UpdateDataset {
 	return newUpdateDataset("default", nil).Table(table)
+}
+
+func (ud *UpdateDataset) WithLocation(loc *time.Location) *UpdateDataset {
+	ud.location = loc
+	return ud
 }
 
 // Set the parameter interpolation behavior. See examples
@@ -241,6 +250,8 @@ func (ud *UpdateDataset) updateSQLBuilder() sb.SQLBuilder {
 	if ud.err != nil {
 		return buf.SetError(ud.err)
 	}
+	buf.SetLocation(ud.location)
+
 	ud.dialect.ToUpdateSQL(buf, ud.clauses)
 	return buf
 }

@@ -23,7 +23,9 @@ type (
 )
 
 func NewQueryFactory(de DbExecutor) QueryFactory {
-	return &querySupport{de}
+	return &querySupport{
+		de: de,
+	}
 }
 
 func (qs *querySupport) FromSQL(query string, args ...interface{}) QueryExecutor {
