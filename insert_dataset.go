@@ -2,7 +2,6 @@ package goqu
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/SkelatorIndy/goqu/exec"
 	"github.com/SkelatorIndy/goqu/exp"
@@ -16,8 +15,6 @@ type InsertDataset struct {
 	isPrepared   prepared
 	queryFactory exec.QueryFactory
 	err          error
-
-	location *time.Location
 }
 
 var ErrUnsupportedIntoType = errors.New("unsupported table type, a string or identifier expression is required")
@@ -35,11 +32,6 @@ func newInsertDataset(d string, queryFactory exec.QueryFactory) *InsertDataset {
 // to create SQL user Database#From to create an InsertDataset with query capabilities
 func Insert(table interface{}) *InsertDataset {
 	return newInsertDataset("default", nil).Into(table)
-}
-
-func (id *InsertDataset) WithLocation(loc *time.Location) *InsertDataset {
-	id.location = loc
-	return id
 }
 
 // Set the parameter interpolation behavior. See examples
@@ -96,7 +88,6 @@ func (id *InsertDataset) copy(clauses exp.InsertClauses) *InsertDataset {
 		isPrepared:   id.isPrepared,
 		queryFactory: id.queryFactory,
 		err:          id.err,
-		location:     id.location,
 	}
 }
 
@@ -277,8 +268,6 @@ func (id *InsertDataset) insertSQLBuilder() sb.SQLBuilder {
 	if id.err != nil {
 		return buf.SetError(id.err)
 	}
-	buf.SetLocation(id.location)
-
 	id.dialect.ToInsertSQL(buf, id.clauses)
 	return buf
 }

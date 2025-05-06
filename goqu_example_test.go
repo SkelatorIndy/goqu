@@ -235,32 +235,25 @@ func ExampleSetTimeLocation() {
 		panic(err)
 	}
 
-	mDB, _, _ := sqlmock.New()
-
-	db := goqu.Dialect("postgres").DB(mDB)
-
-	db2 := goqu.New("postgres", db.Db)
-	db2.WithLocation(loc)
-
 	// use UTC
-	ds := db.Insert("test").Rows(goqu.Record{
+	ds := goqu.Insert("test").Rows(goqu.Record{
 		"address": "111 Address",
 		"name":    "Bob Yukon",
-		"created": created,
+		"created": created.In(time.UTC),
 	})
 	sql, _, _ := ds.ToSQL()
 	log.Println(sql)
 
 	// convert time to new location
-	ds2 := db2.Insert("test").Rows(goqu.Record{
+	ds2 := goqu.Insert("test").Rows(goqu.Record{
 		"address": "111 Address",
 		"name":    "Bob Yukon",
-		"created": created,
+		"created": created.In(loc),
 	})
 	sql, _, _ = ds2.ToSQL()
 	log.Println(sql)
 
 	// Output:
-	// INSERT INTO "test" ("address", "created", "name") VALUES ('111 Address', '2019-10-01T23:01:00+08:00', 'Bob Yukon')
 	// INSERT INTO "test" ("address", "created", "name") VALUES ('111 Address', '2019-10-01T15:01:00Z', 'Bob Yukon')
+	// INSERT INTO "test" ("address", "created", "name") VALUES ('111 Address', '2019-10-01T23:01:00+08:00', 'Bob Yukon')
 }

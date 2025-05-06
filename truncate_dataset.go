@@ -1,8 +1,6 @@
 package goqu
 
 import (
-	"time"
-
 	"github.com/SkelatorIndy/goqu/exec"
 	"github.com/SkelatorIndy/goqu/exp"
 	"github.com/SkelatorIndy/goqu/internal/sb"
@@ -14,8 +12,6 @@ type TruncateDataset struct {
 	isPrepared   prepared
 	queryFactory exec.QueryFactory
 	err          error
-
-	location *time.Location
 }
 
 // used internally by database to create a database with a specific adapter
@@ -36,11 +32,6 @@ func (td *TruncateDataset) WithDialect(dl string) *TruncateDataset {
 	ds := td.copy(td.GetClauses())
 	ds.dialect = GetDialect(dl)
 	return ds
-}
-
-func (td *TruncateDataset) WithLocation(loc *time.Location) *TruncateDataset {
-	td.location = loc
-	return td
 }
 
 // Set the parameter interpolation behavior. See examples
@@ -90,7 +81,6 @@ func (td *TruncateDataset) copy(clauses exp.TruncateClauses) *TruncateDataset {
 		isPrepared:   td.isPrepared,
 		queryFactory: td.queryFactory,
 		err:          td.err,
-		location:     td.location,
 	}
 }
 
@@ -176,8 +166,6 @@ func (td *TruncateDataset) truncateSQLBuilder() sb.SQLBuilder {
 	if td.err != nil {
 		return buf.SetError(td.err)
 	}
-	buf.SetLocation(td.location)
-
 	td.dialect.ToTruncateSQL(buf, td.clauses)
 	return buf
 }

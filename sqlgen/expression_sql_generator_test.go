@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"regexp"
 	"testing"
-	"time"
 
 	"github.com/SkelatorIndy/goqu/exp"
 	"github.com/SkelatorIndy/goqu/internal/errors"
@@ -237,44 +236,6 @@ func (esgs *expressionSQLGeneratorSuite) TestGenerate_BoolTypes() {
 		expressionTestCase{val: &bl, sql: "FALSE"},
 		expressionTestCase{val: &bl, sql: "?", isPrepared: true, args: []interface{}{bl}},
 	)
-}
-
-func (esgs *expressionSQLGeneratorSuite) TestGenerate_TimeTypes() {
-	var nt *time.Time
-
-	ts, err := time.Parse(time.RFC3339, "2019-10-01T15:01:00Z")
-	esgs.Require().NoError(err)
-	originalLoc := sqlgen.GetTimeLocation()
-
-	loc, err := time.LoadLocation("Asia/Shanghai")
-	esgs.Require().NoError(err)
-
-	sqlgen.SetTimeLocation(loc)
-	// non time
-	esgs.assertCases(
-		sqlgen.NewExpressionSQLGenerator("test", sqlgen.DefaultDialectOptions()),
-		expressionTestCase{val: ts, sql: "'2019-10-01T23:01:00+08:00'"},
-		expressionTestCase{val: ts, sql: "?", isPrepared: true, args: []interface{}{ts}},
-
-		expressionTestCase{val: &ts, sql: "'2019-10-01T23:01:00+08:00'"},
-		expressionTestCase{val: &ts, sql: "?", isPrepared: true, args: []interface{}{ts}},
-	)
-	sqlgen.SetTimeLocation(time.UTC)
-	// utc time
-	esgs.assertCases(
-		sqlgen.NewExpressionSQLGenerator("test", sqlgen.DefaultDialectOptions()),
-		expressionTestCase{val: ts, sql: "'2019-10-01T15:01:00Z'"},
-		expressionTestCase{val: ts, sql: "?", isPrepared: true, args: []interface{}{ts}},
-
-		expressionTestCase{val: &ts, sql: "'2019-10-01T15:01:00Z'"},
-		expressionTestCase{val: &ts, sql: "?", isPrepared: true, args: []interface{}{ts}},
-	)
-	esgs.assertCases(
-		sqlgen.NewExpressionSQLGenerator("test", sqlgen.DefaultDialectOptions()),
-		expressionTestCase{val: nt, sql: "NULL"},
-		expressionTestCase{val: nt, sql: "?", isPrepared: true, args: []interface{}{nil}},
-	)
-	sqlgen.SetTimeLocation(originalLoc)
 }
 
 func (esgs *expressionSQLGeneratorSuite) TestGenerate_NilTypes() {

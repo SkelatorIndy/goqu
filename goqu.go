@@ -12,10 +12,7 @@ Please see https://github.com/SkelatorIndy/goqu for an introduction to goqu.
 package goqu
 
 import (
-	"time"
-
 	"github.com/SkelatorIndy/goqu/internal/util"
-	"github.com/SkelatorIndy/goqu/sqlgen"
 )
 
 type DialectWrapper struct {
@@ -76,10 +73,4 @@ func SetIgnoreUntaggedFields(ignore bool) {
 // By default all struct fields that do not have a db tag will be converted lowercase
 func SetColumnRenameFunction(renameFunc func(string) string) {
 	util.SetColumnRenameFunction(renameFunc)
-}
-
-// Set the location to use when interpolating time.Time instances. See https://golang.org/pkg/time/#LoadLocation
-// NOTE: This has no effect when using prepared statements.
-func SetTimeLocation(loc *time.Location) {
-	sqlgen.SetTimeLocation(loc)
 }

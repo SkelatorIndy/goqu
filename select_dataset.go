@@ -3,7 +3,6 @@ package goqu
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/SkelatorIndy/goqu/exec"
 	"github.com/SkelatorIndy/goqu/exp"
@@ -18,8 +17,6 @@ type SelectDataset struct {
 	isPrepared   prepared
 	queryFactory exec.QueryFactory
 	err          error
-
-	location *time.Location
 }
 
 var ErrQueryFactoryNotFoundError = errors.New(
@@ -48,11 +45,6 @@ func (sd *SelectDataset) WithDialect(dl string) *SelectDataset {
 	ds := sd.copy(sd.GetClauses())
 	ds.dialect = GetDialect(dl)
 	return ds
-}
-
-func (sd *SelectDataset) WithLocation(loc *time.Location) *SelectDataset {
-	sd.location = loc
-	return sd
 }
 
 // Set the parameter interpolation behavior. See examples
@@ -102,7 +94,6 @@ func (sd *SelectDataset) copy(clauses exp.SelectClauses) *SelectDataset {
 		isPrepared:   sd.isPrepared,
 		queryFactory: sd.queryFactory,
 		err:          sd.err,
-		location:     sd.location,
 	}
 }
 
@@ -705,8 +696,6 @@ func (sd *SelectDataset) selectSQLBuilder() sb.SQLBuilder {
 	if sd.err != nil {
 		return buf.SetError(sd.err)
 	}
-	buf.SetLocation(sd.location)
-
 	sd.dialect.ToSelectSQL(buf, sd.GetClauses())
 	return buf
 }

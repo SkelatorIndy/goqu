@@ -2,14 +2,11 @@ package sb
 
 import (
 	"bytes"
-	"time"
 )
 
 // Builder that is composed of a bytes.Buffer. It is used internally and by adapters to build SQL statements
 type (
 	SQLBuilder interface {
-		Location() *time.Location
-		SetLocation(loc *time.Location) SQLBuilder
 		Error() error
 		SetError(err error) SQLBuilder
 		WriteArg(i ...interface{}) SQLBuilder
@@ -28,8 +25,6 @@ type (
 		currentArgPosition int
 		args               []interface{}
 		err                error
-
-		location *time.Location
 	}
 )
 
@@ -50,15 +45,6 @@ func (b *sqlBuilder) SetError(err error) SQLBuilder {
 	if b.err == nil {
 		b.err = err
 	}
-	return b
-}
-
-func (b *sqlBuilder) Location() *time.Location {
-	return b.location
-}
-
-func (b *sqlBuilder) SetLocation(loc *time.Location) SQLBuilder {
-	b.location = loc
 	return b
 }
 
